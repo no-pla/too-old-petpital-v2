@@ -1,8 +1,7 @@
 import Page from "@/app/login/page";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach } from "node:test";
 import { act } from "react-dom/test-utils";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 describe("로그인 페이지 테스트", () => {
   beforeEach(() => {
