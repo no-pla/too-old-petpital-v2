@@ -2,7 +2,7 @@
 
 import React from "react";
 import Input from "./Input";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { emailPattern, passwordPattern } from "@/share/utils";
 
 interface RegisterData {
@@ -23,8 +23,17 @@ const RegisterForm = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data: RegisterData) => {
+  const onSubmit = async (data: RegisterData) => {
     console.log(data);
+    const res = await fetch("/api/user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (result?.error) {
+      console.log(result.error);
+    }
   };
   return (
     <FormProvider {...methods}>
