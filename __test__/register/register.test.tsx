@@ -1,11 +1,12 @@
 import Page from "@/app/register/page";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("로그인 페이지 테스트", () => {
   beforeEach(() => {
     render(<Page />);
   });
+
   describe("회원가입 폼 테스트", () => {
     it("모든 input이 제대로 랜더링 되었는지 확인한다.", () => {
       const inputs = screen.getAllByRole("textbox"); // 이메일과 닉네임 input 비밀번호 input은 가져오지 못함
@@ -13,75 +14,105 @@ describe("로그인 페이지 테스트", () => {
       expect(inputs).toHaveLength(2);
       expect(pwInputs).toHaveLength(2);
     });
+
     describe("유효하지 않은 값을 넣으면 버튼이 비활성화되고 에러 메시지가 보여진다.", () => {
       it("유효하지 않은 이메일을 입력했을 때", async () => {
         const emailInput = screen.getByLabelText(/이메일/i);
-        const errorMessage = screen.queryByRole("paragraph");
 
-        expect(errorMessage).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(/올바르지 않은 형식/i)
+        ).not.toBeInTheDocument();
 
-        await fireEvent.change(emailInput, {
-          target: { value: "invalidEmail" },
+        await act(async () => {
+          fireEvent.change(emailInput, {
+            target: { value: "invalidEmail" },
+          });
+          fireEvent.blur(emailInput);
         });
-
+        const errorMessage = screen.queryByText(/올바르지 않은 형식/i);
         expect(errorMessage).toBeInTheDocument();
       });
+
       it("유효하지 않은 비밀번호를 입력했을 때", async () => {
         const passwordInput = screen.getByLabelText("비밀번호");
-        const errorMessage = screen.queryByRole("paragraph");
 
-        expect(errorMessage).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(/올바르지 않은 형식/i)
+        ).not.toBeInTheDocument();
 
-        await fireEvent.change(passwordInput, {
-          target: { value: "invalidPw" },
+        await act(async () => {
+          fireEvent.change(passwordInput, {
+            target: { value: "invalidPw" },
+          });
+          fireEvent.blur(passwordInput);
         });
+
+        const errorMessage = screen.queryByText(/올바르지 않은 형식/i);
 
         expect(errorMessage).toBeInTheDocument();
 
-        await fireEvent.change(passwordInput, {
-          target: { value: "validPw1234" },
+        await act(async () => {
+          fireEvent.change(passwordInput, {
+            target: { value: "validPw1234" },
+          });
         });
-
         expect(errorMessage).not.toBeInTheDocument();
       });
+
       it("비밀번호가 일치하지 않을 때", async () => {
         const passwordInput = screen.getByLabelText("비밀번호");
         const confirmPasswordInput = screen.getByLabelText("비밀번호 재확인");
-        const errorMessage = screen.getByRole("paragraph");
 
-        await fireEvent.change(passwordInput, {
-          target: { value: "validPw1234" },
+        expect(
+          screen.queryByText("비밀번호가 일치하지 않습니다.")
+        ).not.toBeInTheDocument();
+
+        await act(async () => {
+          fireEvent.change(passwordInput, {
+            target: { value: "validPw1234" },
+          });
         });
 
-        await fireEvent.change(confirmPasswordInput, {
-          target: { value: "notTheSamePassword" },
+        await act(async () => {
+          fireEvent.change(confirmPasswordInput, {
+            target: { value: "notTheSamePassword" },
+          });
         });
 
-        expect(errorMessage).toBeInTheDocument();
+        expect(
+          screen.queryByText("비밀번호가 일치하지 않습니다.")
+        ).toBeInTheDocument();
 
-        await fireEvent.change(confirmPasswordInput, {
-          target: { value: "validPw1234" },
+        await act(async () => {
+          fireEvent.change(confirmPasswordInput, {
+            target: { value: "validPw1234" },
+          });
         });
 
-        expect(errorMessage).not.toBeInTheDocument();
+        expect(
+          screen.queryByText("비밀번호가 일치하지 않습니다.")
+        ).not.toBeInTheDocument();
       });
+
       it("유효하지 않은 닉네임을 입력했을 때", async () => {
         const nicknameInput = screen.getByLabelText(/닉네임/i);
-        const errorMessage = screen.queryByRole("paragraph");
 
-        expect(errorMessage).not.toBeInTheDocument();
+        expect(screen.queryByText(/닉네임은/i)).not.toBeInTheDocument();
 
-        await fireEvent.change(nicknameInput, {
-          target: { value: "tooMuchLongLongLongNickName" },
+        await act(async () => {
+          fireEvent.change(nicknameInput, {
+            target: { value: "tooMuchLongLongLongNickName" },
+          });
         });
 
-        expect(errorMessage).toBeInTheDocument();
+        expect(screen.queryByText(/닉네임은/i)).toBeInTheDocument();
 
-        await fireEvent.change(nicknameInput, {
-          target: { value: "validNN" },
+        await act(async () => {
+          fireEvent.change(nicknameInput, {
+            target: { value: "validNN" },
+          });
         });
-
-        expect(errorMessage).not.toBeInTheDocument();
+        expect(screen.queryByText(/닉네임은/i)).not.toBeInTheDocument();
       });
     });
   });
