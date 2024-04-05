@@ -42,8 +42,8 @@ export async function POST(req: Request) {
       data: {
         email,
         password: hashedPassword,
-        profileImage: "test",
-        nickname,
+        image: "test", // TODO: 임시값
+        name: nickname,
         createdAt: new Date().toLocaleDateString(),
       },
     });
