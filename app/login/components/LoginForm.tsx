@@ -41,45 +41,57 @@ const LoginForm = () => {
       }
     });
   };
+
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit((data) => onSubmit(data))}>
-        <Input
-          label="이메일"
-          type="email"
-          id="email"
-          placeholder="사용하실 이메일을 입력해 주세요."
-          validation={{
-            required: {
-              value: true,
-              message: "필수로 입력해야 합니다.",
-            },
-            pattern: {
-              value: emailPattern,
-              message: "올바르지 않은 형식의 이메일입니다.",
-            },
-          }}
-        />
-        <Input
-          label="비밀번호"
-          type="password"
-          id="password"
-          placeholder="비밀번호를 입력해 주세요."
-          validation={{
-            required: {
-              value: true,
-              message: "필수로 입력해야 합니다.",
-            },
-            pattern: {
-              value: passwordPattern,
-              message:
-                "올바르지 않은 형식의 비밀번호입니다. (8자리 이상의 영어 대소문자와 숫자 조합)",
-            },
-          }}
-        />
-        <button>로그인</button>
-      </form>
-    </FormProvider>
+    <div>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit((data) => onSubmit(data))}>
+          <Input
+            label="이메일"
+            type="email"
+            id="email"
+            placeholder="사용하실 이메일을 입력해 주세요."
+            validation={{
+              required: {
+                value: true,
+                message: "필수로 입력해야 합니다.",
+              },
+              pattern: {
+                value: emailPattern,
+                message: "올바르지 않은 형식의 이메일입니다.",
+              },
+            }}
+          />
+          <Input
+            label="비밀번호"
+            type="password"
+            id="password"
+            placeholder="비밀번호를 입력해 주세요."
+            validation={{
+              required: {
+                value: true,
+                message: "필수로 입력해야 합니다.",
+              },
+              pattern: {
+                value: passwordPattern,
+                message:
+                  "올바르지 않은 형식의 비밀번호입니다. (8자리 이상의 영어 대소문자와 숫자 조합)",
+              },
+            }}
+          />
+          <button>로그인</button>
+        </form>
+      </FormProvider>
+      <button
+        onClick={() =>
+          signIn("naver", {
+            callbackUrl: "/",
+          })
+        }
+      >
+        네이버 로그인
+      </button>
+    </div>
   );
 };
 

@@ -4,6 +4,7 @@ import React from "react";
 import Input from "./Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { emailPattern, passwordPattern } from "@/share/utils";
+import { useRouter } from "next/navigation";
 
 interface RegisterData {
   email: string;
@@ -13,6 +14,7 @@ interface RegisterData {
 }
 
 const RegisterForm = () => {
+  const router = useRouter();
   const methods = useForm<RegisterData>({
     defaultValues: {
       email: "",
@@ -33,7 +35,9 @@ const RegisterForm = () => {
     const result = await res.json();
     if (result?.error) {
       console.log(result.error);
+      return;
     }
+    router.push("/login");
   };
   return (
     <FormProvider {...methods}>
