@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     },
   });
 
-  if (user) {
+  if (user && user.password !== null) {
     return NextResponse.json(
       { error: "이미 가입한 유저입니다." },
       { status: 409 }
@@ -38,17 +38,23 @@ export async function POST(req: Request) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    await prisma.user.create({
-      data: {
+    await prisma.user.upsert({
+      where: {
+        email,
+      },
+      update: {
+        password: hashedPassword,
+        name: nickname,
+      },
+      create: {
         email,
         password: hashedPassword,
-        image: "test", // TODO: 임시값
+        image: "img/default-image", // TODO: 임시값
         name: nickname,
         createdAt: new Date().toLocaleDateString(),
       },
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { error: "예기치 못한 에러가 발생했습니다." },
       { status: 500 }
