@@ -6,6 +6,16 @@ declare module "next-auth" {
       id: string;
     };
   }
+  interface Profile {
+    resultcode: string;
+    message: string;
+    response: {
+      id: string;
+      nickname: string;
+      profile_image: string;
+      email: string;
+    };
+  }
 }
 
 declare module "next-auth/jwt" {
