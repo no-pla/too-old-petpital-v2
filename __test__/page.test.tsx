@@ -1,8 +1,11 @@
-import { expect, test } from "vitest";
+import Page from "@/app/page";
+import Provider from "@/provider/Provider";
 import { render, screen } from "@testing-library/react";
-import Page from "../app/page";
+import { expect, it, vi } from "vitest";
 
-test("랜더링 테스트0", () => {
+it("랜더링 테스트", () => {
   render(<Page />);
-  expect(screen.getByRole("heading", { level: 1, name: "Home" })).toBeDefined();
+
+  const heading = screen.getByText("Page");
+  expect(heading).toBeInTheDocument();
 });

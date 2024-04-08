@@ -1,10 +1,16 @@
 import Page from "@/app/register/page";
+import AppRouterContextProviderMock from "@/provider/app-router-context-provider-mock";
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("로그인 페이지 테스트", () => {
   beforeEach(() => {
-    render(<Page />);
+    const push = vi.fn();
+    render(
+      <AppRouterContextProviderMock router={{ push }}>
+        <Page />
+      </AppRouterContextProviderMock>
+    );
   });
 
   describe("회원가입 폼 테스트", () => {
