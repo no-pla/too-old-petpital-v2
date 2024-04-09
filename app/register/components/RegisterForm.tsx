@@ -5,6 +5,8 @@ import Input from "./Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { emailPattern, passwordPattern } from "@/share/utils";
 import { useRouter } from "next/navigation";
+import Button from "./Button";
+import Image from "next/image";
 
 interface RegisterData {
   email: string;
@@ -26,7 +28,6 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data: RegisterData) => {
-    console.log(data);
     const res = await fetch("/api/user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,9 +40,13 @@ const RegisterForm = () => {
     }
     router.push("/login");
   };
+
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit((data) => onSubmit(data))}>
+      <form
+        onSubmit={methods.handleSubmit((data) => onSubmit(data))}
+        className="flex flex-col gap-[52px] tablet:gap-4"
+      >
         <Input
           label="이메일"
           type="email"
@@ -110,7 +115,7 @@ const RegisterForm = () => {
             },
           }}
         />
-        <button>회원가입</button>
+        <Button text="회원가입" />
       </form>
     </FormProvider>
   );

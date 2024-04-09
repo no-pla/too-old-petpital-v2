@@ -42,7 +42,7 @@ const Input = ({ label, type, validation, id, placeholder }: InputData) => {
 
   return (
     <div>
-      <label htmlFor={id} className="font-bold">
+      <label htmlFor={id} className="font-bold tablet:text-[14px]">
         {label}
       </label>
       <div className="relative my-[8px]">
@@ -51,7 +51,7 @@ const Input = ({ label, type, validation, id, placeholder }: InputData) => {
           type={type}
           placeholder={placeholder}
           {...register(id, validation)}
-          className="border-[1px] border-[#c5c5c5] py-[18.5px] px-6 font-[16px] w-full focus:border-main outline-none"
+          className="border-[1px] border-[#c5c5c5] py-[18.5px] px-6 text-[16px] w-full focus:border-main outline-none tablet:text-[14px]"
         />
         {getValues(id) !== "" && (
           <button
@@ -63,7 +63,9 @@ const Input = ({ label, type, validation, id, placeholder }: InputData) => {
         )}
       </div>
       {errors && errors[id] && (
-        <p className="text-warn">{errors[id]?.message?.toString()}</p>
+        <p className="text-warn tablet:text-[14px]">
+          {errors[id]?.message?.toString()}
+        </p>
       )}
     </div>
   );
