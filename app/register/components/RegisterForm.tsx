@@ -7,6 +7,7 @@ import { emailPattern, passwordPattern } from "@/share/utils";
 import { useRouter } from "next/navigation";
 import Button from "./Button";
 import Image from "next/image";
+import Link from "next/link";
 
 interface RegisterData {
   email: string;
@@ -117,6 +118,9 @@ const RegisterForm = () => {
         />
         <Button text="회원가입" />
       </form>
+      <div className="underline text-[20px] text-main text-center mt-10 tablet:my-4">
+        <Link href="/login">로그인하기</Link>
+      </div>
     </FormProvider>
   );
 };
