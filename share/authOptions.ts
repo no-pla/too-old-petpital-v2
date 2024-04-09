@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import NaverProvider from "next-auth/providers/naver";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -51,27 +52,63 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.NAVER_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
   ],
   callbacks: {
-    async signIn({ user, profile, credentials }) {
+    async signIn({ user, profile, credentials, account }) {
       if (!credentials) {
-        const userExist = await prisma.user.findUnique({
-          where: {
-            email: profile?.response.email,
-          },
-        });
-
-        if (!userExist) {
-          await prisma.user.create({
-            data: {
-              email: profile?.response.email!,
-              image: profile?.response.profile_image!,
-              name: profile?.response.nickname!,
-              createdAt: new Date().toLocaleDateString(),
+        if (account?.provider === "naver") {
+          const userExist = await prisma.user.findUnique({
+            where: {
+              email: profile?.response!.email,
             },
           });
-        } else {
-          user = Object.assign(user, userExist);
+
+          if (!userExist) {
+            const newUser = await prisma.user.create({
+              data: {
+                email: profile?.response!.email!,
+                image: profile?.response!.profile_image!,
+                name: profile?.response!.nickname!,
+                createdAt: new Date().toLocaleDateString(),
+              },
+            });
+            user.id = newUser.id;
+          } else {
+            user = Object.assign(user, userExist);
+          }
+        }
+        if (account?.provider === "google") {
+          const userExist = await prisma.user.findUnique({
+            where: {
+              email: profile?.email,
+            },
+          });
+
+          if (!userExist) {
+            const newUser = await prisma.user.create({
+              data: {
+                name: profile?.name!,
+                email: profile?.email!,
+                image: profile?.picture!,
+                createdAt: new Date().toLocaleDateString(),
+              },
+            });
+            user.id = newUser.id;
+          } else {
+            user = Object.assign(user, userExist);
+          }
         }
       }
       return true;

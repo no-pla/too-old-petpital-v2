@@ -9,12 +9,13 @@ declare module "next-auth" {
   interface Profile {
     resultcode: string;
     message: string;
-    response: {
+    response?: {
       id: string;
       nickname: string;
       profile_image: string;
       email: string;
     };
+    picture?: string;
   }
 }
 

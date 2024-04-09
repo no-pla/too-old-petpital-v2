@@ -91,6 +91,15 @@ const LoginForm = () => {
       >
         네이버 로그인
       </button>
+      <button
+        onClick={() =>
+          signIn("google", {
+            callbackUrl: "/",
+          })
+        }
+      >
+        구글 로그인
+      </button>
     </div>
   );
 };
