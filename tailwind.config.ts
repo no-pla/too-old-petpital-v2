@@ -8,19 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      screens: {
-        mobile: { max: "375px" },
-        tablet: { max: "768px" },
-        laptop: { max: "1024px" },
-        desktop: { max: "1280px" },
-      },
       fontFamily: {
         pretendard: ["Pretendard"],
       },
       colors: {
         main: "#15B5BF",
         sub: "#AFE5E9",
-        warn: "#ff4141",
       },
     },
   },
