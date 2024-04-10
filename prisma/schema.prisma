@@ -1,0 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  password  String?
+  name      String
+  createdAt DateTime? @default(now())
+  image     String?   @default("https://firebasestorage.googleapis.com/v0/b/petpital-v2-9d726.appspot.com/o/assets%2Fno-image.png?alt=media&token=238d004e-2082-4b8c-baf8-d65dcef4a8d8")
+}
