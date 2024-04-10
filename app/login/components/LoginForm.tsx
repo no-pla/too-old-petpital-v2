@@ -28,7 +28,7 @@ const LoginForm = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
   } = useForm<LoginData>({
     defaultValues: {
       email: "",
@@ -80,7 +80,11 @@ const LoginForm = () => {
             <div className="absolute top-1/2 transform left-6 -translate-y-1/2">
               <FiUser color="#C5C5C5" className="w-6 h-6" />
             </div>
+            <label htmlFor="email" className="hidden">
+              이메일
+            </label>
             <input
+              id="email"
               placeholder="이메일"
               className={`w-full ${errors["email"] ? "border-warn" : "border-[#c5c5c5]"} border-[0.4px] py-5 pl-[64px] bg-[#FAFAFA] text-[14px] rounded-t`}
               type="email"
@@ -100,7 +104,11 @@ const LoginForm = () => {
             <div className="absolute top-1/2 transform left-6 -translate-y-1/2">
               <FiLock color="#C5C5C5" className="w-6 h-6" />
             </div>
+            <label htmlFor="password" className="hidden">
+              비밀번호
+            </label>
             <input
+              id="password"
               placeholder="비밀번호"
               className={`w-full ${errors["password"] ? "border-warn" : "border-[#c5c5c5]"}  border-[0.4px] py-5 pl-[64px] bg-[#FAFAFA] text-[14px] rounded-b`}
               type="password"
@@ -117,7 +125,7 @@ const LoginForm = () => {
               })}
             />
           </div>
-          <Button text="로그인" />
+          <Button text="로그인" disabled={isDirty ? !isValid : false} />
         </form>
         <div className="mt-[80px] px-4 text-center text-[14px] text-[#C5C5C5] max-w-3xl relative before:content-[''] before:block before:w-[calc(50%-30px)] before:h-[2px] before:bg-[#C5C5C5] before:left-0 before:top-1/2 before:absolute after:content-[''] after:block after:w-[calc(50%-30px)] after:h-[2px] after:bg-[#C5C5C5] after:right-0 after:top-1/2 after:absolute tablet:mt-[66px]">
           또는

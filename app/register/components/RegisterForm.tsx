@@ -116,7 +116,12 @@ const RegisterForm = () => {
             },
           }}
         />
-        <Button text="회원가입" />
+        <Button
+          text="회원가입"
+          disabled={
+            methods.formState.isDirty ? !methods.formState.isValid : false
+          }
+        />
       </form>
       <div className="underline text-[20px] text-main text-center mt-10 tablet:my-4">
         <Link href="/login">로그인하기</Link>
