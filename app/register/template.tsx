@@ -10,7 +10,8 @@ const template = ({ children }: { children: React.ReactNode }) => {
           alt="펫피탈 로고"
           width={368}
           height={0}
-          className="mx-auto mb-16 max-w-[60%] m-w-[182px] tablet:mb-10"
+          layout="responsive"
+          className="mx-auto mb-16 max-w-[60%] min-w-[182px] tablet:mb-10"
         />
         {children}
       </div>

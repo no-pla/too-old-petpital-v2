@@ -58,7 +58,7 @@ const LoginForm = () => {
           alt="펫피탈 로고"
           width={368}
           height={0}
-          className="mx-auto mb-10 max-w-[60%] m-w-[182px] tablet:mb-10"
+          className="mx-auto mb-10 max-w-[60%] min-w-[182px] tablet:mb-10"
         />
         <div className="pb-8 text-center">
           {errors && errors["email"] && (
