@@ -81,7 +81,6 @@ export const authOptions: NextAuthOptions = {
                 email: profile?.response!.email!,
                 image: profile?.response!.profile_image!,
                 name: profile?.response!.nickname!,
-                createdAt: new Date().toLocaleDateString(),
               },
             });
             user.id = newUser.id;
@@ -102,7 +101,6 @@ export const authOptions: NextAuthOptions = {
                 name: profile?.name!,
                 email: profile?.email!,
                 image: profile?.picture!,
-                createdAt: new Date().toLocaleDateString(),
               },
             });
             user.id = newUser.id;

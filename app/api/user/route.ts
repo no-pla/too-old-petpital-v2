@@ -49,9 +49,7 @@ export async function POST(req: Request) {
       create: {
         email,
         password: hashedPassword,
-        image: "img/default-image", // TODO: 임시값
         name: nickname,
-        createdAt: new Date().toLocaleDateString(),
       },
     });
   } catch (error) {
