@@ -7,7 +7,7 @@ const OAuthButton = ({
   onClick,
 }: {
   type: "google" | "naver";
-  onClick: () => any;
+  onClick: () => void;
 }) => {
   return (
     <button
