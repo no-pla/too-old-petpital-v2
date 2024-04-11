@@ -22,6 +22,9 @@ const config: Config = {
         sub: "#AFE5E9",
         warn: "#ff4141",
       },
+      boxShadow: {
+        mapButtonShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.1)",
+      },
     },
   },
   plugins: [],
