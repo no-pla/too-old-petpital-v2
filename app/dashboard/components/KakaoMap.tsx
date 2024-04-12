@@ -26,6 +26,7 @@ const KakaoMap = () => {
   const [map, setMap] = useState<any>();
   const [hospitalName, setHospitalName] = useState<string>("");
   const [hospitalArray, setHospitalArray] = useState<any>();
+  const [pagination, setPagination] = useState<any>();
 
   const [userLocation, setUserLocation] = useState<geoLocationData>({
     center: {
@@ -72,13 +73,15 @@ const KakaoMap = () => {
       }));
     }
   }, []);
+
   useEffect(() => {
     // 검색
     if (!map) return;
     if (hospitalName === "") return;
     const ps = new kakao.maps.services.Places();
+    setPagination(null);
+    const hospital = hospitalName + "동물 병원";
 
-    const hospital = hospitalName + "동물병원";
     ps.keywordSearch(
       hospital,
       (data, status, pagination) => {
@@ -113,7 +116,7 @@ const KakaoMap = () => {
         }
         // resetPagination();
         if (pagination.first !== pagination.last && pagination.last > 1) {
-          // setPagination(pagination);
+          setPagination(pagination);
         }
         setHospitalArray(data);
       },
@@ -241,6 +244,16 @@ const KakaoMap = () => {
           </CustomOverlayMap>
         ))}
       </Map>
+      <div>
+        {pagination && (
+          <>
+            <div className="z-20 absolute bottom-6 left-4">
+              <button onClick={() => pagination.prevPage()}>이전</button>
+              <button onClick={() => pagination.nextPage()}>다음</button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
