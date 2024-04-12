@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
+import React, { useEffect, useRef, useState } from "react";
+import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import HospitalIcon from "../../../public/icons/big.svg";
 
 interface geoLocationData {
   center: {
@@ -20,6 +21,12 @@ const KakaoMap = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [mapType, setMapType] = useState<"roadmap" | "skyview">("roadmap");
+  const hospitalRef = useRef<HTMLInputElement>(null);
+  const [markers, setMarkers] = useState<any>([]);
+  const [map, setMap] = useState<any>();
+  const [hospitalName, setHospitalName] = useState<string>("");
+  const [hospitalArray, setHospitalArray] = useState<any>();
+
   const [userLocation, setUserLocation] = useState<geoLocationData>({
     center: {
       lat: 37.5666805,
@@ -32,7 +39,7 @@ const KakaoMap = () => {
   useEffect(() => {
     const options = {
       enableHighAccuracy: false,
-      timeout: 5000,
+      timeout: 10000,
       maximumAge: Infinity,
     };
 
@@ -65,6 +72,62 @@ const KakaoMap = () => {
       }));
     }
   }, []);
+  useEffect(() => {
+    // 검색
+    if (!map) return;
+    if (hospitalName === "") return;
+    const ps = new kakao.maps.services.Places();
+
+    const hospital = hospitalName + "동물병원";
+    ps.keywordSearch(
+      hospital,
+      (data, status, pagination) => {
+        if (status === kakao.maps.services.Status.ZERO_RESULT) {
+          // TODO: 검색 결과 없을 때 처리
+        }
+        if (status === kakao.maps.services.Status.OK) {
+          // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+          // LatLngBounds 객체에 좌표를 추가합니다
+          const bounds = new kakao.maps.LatLngBounds();
+          let markers = [];
+
+          for (var i = 0; i < data.length; i++) {
+            // @ts-ignore
+            markers.push({
+              position: {
+                lat: data[i].y,
+                lng: data[i].x,
+              },
+              content: data[i].place_name,
+            });
+            // }
+
+            // @ts-ignore
+            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+          }
+
+          setMarkers(markers);
+
+          // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+          map.setBounds(bounds);
+        }
+        // resetPagination();
+        if (pagination.first !== pagination.last && pagination.last > 1) {
+          // setPagination(pagination);
+        }
+        setHospitalArray(data);
+      },
+      {
+        category_group_code: "HP8",
+      }
+    );
+  }, [hospitalName, map]);
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!hospitalRef.current?.value) return;
+    setHospitalName(hospitalRef.current.value);
+  };
 
   return (
     <div>
@@ -107,6 +170,13 @@ const KakaoMap = () => {
           </button>
         )}
       </div>
+      <form onSubmit={(event) => onSubmit(event)}>
+        <input
+          className="absolute top-5 left-6 z-20"
+          placeholder="병원을 검색해 주세요."
+          ref={hospitalRef}
+        />
+      </form>
       {/* 지도 */}
       <Map
         center={{
@@ -121,6 +191,7 @@ const KakaoMap = () => {
         }}
         level={3} // 지도의 확대 레벨
         mapTypeId={mapType === "roadmap" ? "ROADMAP" : "HYBRID"}
+        onCreate={setMap}
       >
         {/* 유저 위치 */}
         {!userLocation.isLoading && (
@@ -149,6 +220,26 @@ const KakaoMap = () => {
             </div>
           </CustomOverlayMap>
         )}
+        {/* 검색된 병원 핀 */}
+        {markers.map((marker: any) => (
+          <CustomOverlayMap
+            key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
+            position={marker.position}
+          >
+            <div className="relative w-14 h-14 flex justify-center items-center">
+              <div className="absolute -top-10 text-white bg-main border-[#24979E] border-[1px] font-bold p-2 rounded">
+                {marker.content}
+              </div>
+              <Image
+                src={HospitalIcon}
+                alt="병원 아이콘"
+                width={56}
+                height={56}
+                className="absolute top-0"
+              />
+            </div>
+          </CustomOverlayMap>
+        ))}
       </Map>
     </div>
   );
