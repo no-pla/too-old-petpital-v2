@@ -6,6 +6,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HospitalIcon from "../../../public/icons/big.svg";
+import Dashboard from "./Dashboard";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { searchedHospital } from "@/share/atom";
+import HospitalList from "./HospitalList";
+import MainLogo from "../../../public/logo/main_logo.svg";
+import { CiSearch } from "react-icons/ci";
 
 interface geoLocationData {
   center: {
@@ -25,7 +31,7 @@ const KakaoMap = () => {
   const [markers, setMarkers] = useState<any>([]);
   const [map, setMap] = useState<any>();
   const [hospitalName, setHospitalName] = useState<string>("");
-  const [hospitalArray, setHospitalArray] = useState<any>();
+  const setHospitalArray = useSetRecoilState<any>(searchedHospital);
   const [pagination, setPagination] = useState<any>();
 
   const [userLocation, setUserLocation] = useState<geoLocationData>({
@@ -173,13 +179,26 @@ const KakaoMap = () => {
           </button>
         )}
       </div>
-      <form onSubmit={(event) => onSubmit(event)}>
-        <input
-          className="absolute top-5 left-6 z-20"
-          placeholder="병원을 검색해 주세요."
-          ref={hospitalRef}
-        />
-      </form>
+      <Dashboard>
+        <form
+          onSubmit={(event) => onSubmit(event)}
+          className="bg-main py-2 sticky top-0"
+        >
+          <Image
+            src={MainLogo}
+            alt="메인 로고"
+            className="absolute top-3 left-3"
+          />
+          <CiSearch className="absolute w-6 h-6 top-5 left-[56px]" />
+          <input
+            className="w-[calc(100%-72px)] ml-12 mr-6 py-3 pl-10 border-black border-[0.4px] rounded-sm text-[14px]"
+            // className="w-[calc(100%-24px)] py-3"
+            placeholder="병원을 검색해 주세요."
+            ref={hospitalRef}
+          />
+        </form>
+        <HospitalList pagination={pagination} />
+      </Dashboard>
       {/* 지도 */}
       <Map
         center={{
@@ -244,16 +263,6 @@ const KakaoMap = () => {
           </CustomOverlayMap>
         ))}
       </Map>
-      <div>
-        {pagination && (
-          <>
-            <div className="z-20 absolute bottom-6 left-4">
-              <button onClick={() => pagination.prevPage()}>이전</button>
-              <button onClick={() => pagination.nextPage()}>다음</button>
-            </div>
-          </>
-        )}
-      </div>
     </div>
   );
 };
