@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
+import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HospitalIcon from "../../../public/icons/big.svg";
 import Dashboard from "./Dashboard";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { searchedHospital } from "@/share/atom";
+import { useSetRecoilState } from "recoil";
+import { hospitalPagination, searchedHospital } from "@/share/atom";
 import HospitalList from "./HospitalList";
 import MainLogo from "../../../public/logo/main_logo.svg";
 import { CiSearch } from "react-icons/ci";
+import DashboardContainer from "./DashboardContainer";
+import SearchDashBoard from "./SearchDashBoard";
 
 interface geoLocationData {
   center: {
@@ -32,7 +34,9 @@ const KakaoMap = () => {
   const [map, setMap] = useState<any>();
   const [hospitalName, setHospitalName] = useState<string>("");
   const setHospitalArray = useSetRecoilState<any>(searchedHospital);
-  const [pagination, setPagination] = useState<any>();
+  const setPagination = useSetRecoilState<any>(hospitalPagination);
+  const [showList, setShowList] = useState(false);
+  const [showReviewList, setReviewList] = useState(false);
 
   const [userLocation, setUserLocation] = useState<geoLocationData>({
     center: {
@@ -142,7 +146,7 @@ const KakaoMap = () => {
     <div>
       {/* 지도 스카이뷰 토글 */}
       <div className="absolute z-20 flex gap-4 right-6 top-7">
-        <div className="flex bg-white rounded p-1 shadow-mapButtonShadow">
+        <div className="flex bg-white rounded p-1 shadow-mapButtonShadow tablet:fixed tablet:top-[80px] right-3">
           <div
             id="btnRoadmap"
             className={`${mapType === "roadmap" ? "selected_btn bg-main text-white" : "btn"} p-2 rounded cursor-pointer`}
@@ -179,27 +183,51 @@ const KakaoMap = () => {
           </button>
         )}
       </div>
-      <Dashboard>
-        <form
-          onSubmit={(event) => onSubmit(event)}
-          className="bg-main py-2 sticky top-0"
-        >
-          <Image
-            src={MainLogo}
-            alt="메인 로고"
-            className="absolute top-3 left-3"
-          />
-          <CiSearch className="absolute w-6 h-6 top-5 left-[56px]" />
-          <input
-            className="w-[calc(100%-72px)] ml-12 mr-6 py-3 pl-10 border-black border-[0.4px] rounded-sm text-[14px]"
-            // className="w-[calc(100%-24px)] py-3"
-            placeholder="병원을 검색해 주세요."
-            ref={hospitalRef}
-          />
-        </form>
-        <HospitalList pagination={pagination} />
-      </Dashboard>
-      {/* 지도 */}
+      <DashboardContainer>
+        {showList ? (
+          <Dashboard>
+            <form
+              onSubmit={(event) => onSubmit(event)}
+              className="bg-main py-2 sticky top-0"
+            >
+              <Image
+                src={MainLogo}
+                alt="메인 로고"
+                className="absolute top-3 left-3"
+              />
+              <CiSearch className="absolute w-6 h-6 top-5 left-[56px]" />
+              <input
+                className="w-[calc(100%-72px)] ml-12 mr-6 py-3 pl-10 border-black border-[0.4px] rounded-sm text-[14px]"
+                placeholder="병원을 검색해 주세요."
+                ref={hospitalRef}
+              />
+            </form>
+            <HospitalList />
+          </Dashboard>
+        ) : (
+          <form
+            onSubmit={(event) => onSubmit(event)}
+            className="bg-main py-2 absolute top-6 left-6 h-fit rounded tablet:left-2 tablet:top-2"
+          >
+            <Image
+              src={MainLogo}
+              alt="메인 로고"
+              className="absolute top-3 left-3"
+            />
+            <CiSearch className="absolute w-6 h-6 top-5 left-[56px]" />
+            <input
+              className="w-[calc(100%-72px)] ml-12 mr-6 py-3 pl-10 pr-[120px] border-black border-[0.4px] rounded-sm text-[14px] tablet:mr-4 tablet:pr-0"
+              placeholder="병원을 검색해 주세요."
+              ref={hospitalRef}
+            />
+          </form>
+        )}
+        {showReviewList && (
+          <Dashboard second={true}>
+            <div>리뷰창</div>
+          </Dashboard>
+        )}
+      </DashboardContainer>
       <Map
         center={{
           // 지도의 중심좌표

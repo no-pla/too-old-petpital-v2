@@ -25,6 +25,7 @@ const config: Config = {
       boxShadow: {
         mapButtonShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.1)",
         mapShadow: "0 4px 4px 0 rgba(0, 0, 0, 0.25)",
+        dashboardShadow: "4px 0 4px0 rgba(0, 0, 0, 0.1)",
       },
     },
   },
