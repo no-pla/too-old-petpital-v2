@@ -13,7 +13,7 @@ import HospitalList from "./HospitalList";
 import MainLogo from "../../../public/logo/main_logo.svg";
 import { CiSearch } from "react-icons/ci";
 import DashboardContainer from "./DashboardContainer";
-import SearchDashBoard from "./SearchDashBoard";
+import HospitalInfo from "./HospitalInfo";
 
 interface geoLocationData {
   center: {
@@ -36,8 +36,7 @@ const KakaoMap = () => {
   const setHospitalArray = useSetRecoilState<any>(searchedHospital);
   const setPagination = useSetRecoilState<any>(hospitalPagination);
   const [showList, setShowList] = useState(false);
-  const [showReviewList, setReviewList] = useState(false);
-
+  const [showReviewList, setShowReviewList] = useState(false);
   const [userLocation, setUserLocation] = useState<geoLocationData>({
     center: {
       lat: 37.5666805,
@@ -182,6 +181,7 @@ const KakaoMap = () => {
             로그인
           </button>
         )}
+        <button onClick={() => setShowList((prev) => !prev)}>열기</button>
       </div>
       <DashboardContainer>
         {showList ? (
@@ -202,7 +202,7 @@ const KakaoMap = () => {
                 ref={hospitalRef}
               />
             </form>
-            <HospitalList />
+            <HospitalList setShowReviewList={setShowReviewList} />
           </Dashboard>
         ) : (
           <form
@@ -244,7 +244,7 @@ const KakaoMap = () => {
         onCreate={setMap}
       >
         {/* 유저 위치 */}
-        {!userLocation.isLoading && (
+        {!userLocation.isLoading && !userLocation?.errMsg && (
           <CustomOverlayMap
             position={{
               lat: userLocation.center.lat,
