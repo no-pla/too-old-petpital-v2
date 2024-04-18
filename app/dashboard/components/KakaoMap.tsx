@@ -224,7 +224,7 @@ const KakaoMap = () => {
         )}
         {showReviewList && (
           <Dashboard second={true}>
-            <div>리뷰창</div>
+            <HospitalInfo />
           </Dashboard>
         )}
       </DashboardContainer>

@@ -1,6 +1,10 @@
 import React from "react";
-import { hospitalPagination, searchedHospital } from "@/share/atom";
-import { useRecoilValue } from "recoil";
+import {
+  hospitalPagination,
+  searchedHospital,
+  selectedHospital,
+} from "@/share/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface hospitalData {
   address_name: string;
@@ -17,9 +21,15 @@ interface hospitalData {
   y: string;
 }
 
-const HospitalList = () => {
+const HospitalList = ({ setShowReviewList }: { setShowReviewList: any }) => {
   const hospitalArray = useRecoilValue<any>(searchedHospital);
   const pagination = useRecoilValue<any>(hospitalPagination);
+  const setSelectedHospitalInfo = useSetRecoilState(selectedHospital);
+
+  const onClick = (hospital: hospitalData) => {
+    setSelectedHospitalInfo(hospital);
+    setShowReviewList(true);
+  };
 
   return (
     <div className="min-h-[calc(100vh-110px)] flex flex-col justify-between">
@@ -29,6 +39,7 @@ const HospitalList = () => {
             <div
               key={hospital?.id}
               className={`pl-[18px] pt-3 pb-2 flex flex-col ${index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"}`}
+              onClick={() => onClick(hospital)}
             >
               <div className="flex items-center">
                 <div className="pr-4 font-bold text-main text-[20px] w-8">
