@@ -6,14 +6,14 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HospitalIcon from "../../../public/icons/big.svg";
-import Dashboard from "./Dashboard";
+import Dashboard from "./Dashboards/Dashboard";
 import { useSetRecoilState } from "recoil";
 import { hospitalPagination, searchedHospital } from "@/share/atom";
 import HospitalList from "./HospitalList";
 import MainLogo from "../../../public/logo/main_logo.svg";
 import { CiSearch } from "react-icons/ci";
 import DashboardContainer from "./DashboardContainer";
-import HospitalInfo from "./HospitalInfo";
+import HospitalReviewList from "./Dashboards/HospitalReviewList";
 
 interface geoLocationData {
   center: {
@@ -222,11 +222,7 @@ const KakaoMap = () => {
             />
           </form>
         )}
-        {showReviewList && (
-          <Dashboard second={true}>
-            <HospitalInfo />
-          </Dashboard>
-        )}
+        {showReviewList && <HospitalReviewList />}
       </DashboardContainer>
       <Map
         center={{
