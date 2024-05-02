@@ -6,14 +6,14 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HospitalIcon from "../../../public/icons/big.svg";
-import Dashboard from "./Dashboards/Dashboard";
+import Dashboard from "./Dashboard/Dashboard";
 import { useSetRecoilState } from "recoil";
 import { hospitalPagination, searchedHospital } from "@/share/atom";
-import HospitalList from "./HospitalList";
+import HospitalList from "./Search/HospitalList";
 import MainLogo from "../../../public/logo/main_logo.svg";
 import { CiSearch } from "react-icons/ci";
-import DashboardContainer from "./DashboardContainer";
-import HospitalReviewList from "./Dashboards/HospitalReviewList";
+import DashboardContainer from "./Dashboard/DashboardContainer";
+import HospitalReviewList from "./Review/HospitalReviewList";
 
 interface geoLocationData {
   center: {
